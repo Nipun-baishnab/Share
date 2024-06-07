@@ -1,0 +1,82 @@
+#include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp> // Common file
+#include <ext/pb_ds/tree_policy.hpp>
+#include <functional> // for less
+#include <iostream>
+#define   MP             make_pair
+#define   PB             push_back
+#define   pb             push_back
+#define   nn             '\n'
+#define   endl           '\n'
+#define   IOS            ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+#define   UNIQUE(vec)    vec.resize(distance(vec.begin(),unique(vec.begin(),vec.end()))) ;
+#define   all(vec)       vec.begin(),vec.end()
+#define   int            long long
+#define   pii            pair<int,int>
+#define   pdd            pair<double,double>
+#define   ff             first
+#define   ss             second
+#define   edge(u,v)      adj[u].pb(v) , adj[v].pb(u)
+#define   white          0
+#define   blue           1
+#define   red            2
+
+using namespace std ;
+
+typedef long long LL ;
+
+const int MOD=1e9+7 ;
+const int N=3e6+7 ;
+const int oo=2LL*MOD*MOD*1LL+MOD ;
+const double pie=acos(-1.0) ;
+const double EPS=1e-9 ;
+
+int test, n, k, a[N], q, dp[N] ;
+
+int32_t main()
+{
+    IOS ;
+
+    cin>>n>>q ;
+
+    int sum = 0 ;
+
+    for(int i=1;i<=n;i++)
+    {
+        int msk = (1<<20)-1 ;
+        cin>>a[i] ;
+        dp[msk^a[i]] = max(dp[msk^a[i]],msk-a[i]) ;
+        sum+=a[i] ;
+    }
+
+    for(int msk=N-1;msk;msk--)
+    {
+        for(int i=0;i<20;i++)
+        {
+            if(msk&(1<<i))
+            {
+                dp[msk^(1<<i)] = max(dp[msk^(1<<i)],dp[msk]) ;
+            }
+        }
+    }
+
+    for(int msk=0;msk<N;++msk)
+    {
+        for(int j=0;j<20;++j)
+        {
+            if(msk&(1<<j))continue ;
+            if((msk|(1<<j) )>=N)continue ;
+            dp[msk|(1<<j)] = max(dp[msk|(1<<j)],dp[msk]-(1<<j)) ;
+        }
+    }
+
+    while(q--)
+    {
+        int x ;
+        cin>>x ;
+        int ans = dp[x]+sum ;
+        cout<<ans<<endl ;
+    }
+
+    return 0 ;
+}
